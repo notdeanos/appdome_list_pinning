@@ -77,30 +77,31 @@ if response.status_code == 200:
 
     # Iterate over the apps and print details
     for app in data['apps']:
-        print("\nApp ID:", app['id'])
-        print("Creation Time:", app['creation_time'])
-        print("Pack Name:", app['pack_name'])
-        print("Pack Size:", app['pack_size'])
-        print("Pack Type:", app['pack_type'])
-        print("Bundle Identifier:", app['pack_bundle_identifier'])
-        print("Bundle Version:", app['pack_bundle_version'])
-        print("Bundle Display Name:", app['pack_bundle_display_name'])
-        print("Bundle Build Number:", app['pack_bundle_build_number'])
-        print("App Store Description:", app['pack_app_store_description'])
-        print("Status:", app['status'])
-        print("---------------------------\n")
+        print(json.dumps(app, indent=4))
+        #print("App ID:", app['id'])
+        #print("Creation Time:", app['creation_time'])
+        #print("Pack Name:", app['pack_name'])
+        #print("Pack Size:", app['pack_size'])
+        #print("Pack Type:", app['pack_type'])
+        #print("Bundle Identifier:", app['pack_bundle_identifier'])
+        #print("Bundle Version:", app['pack_bundle_version'])
+        #print("Bundle Display Name:", app['pack_bundle_display_name'])
+        #print("Bundle Build Number:", app['pack_bundle_build_number'])
+        #print("App Store Description:", app['pack_app_store_description'])
+        #print("Status:", app['status'])
+        #print("---------------------------\n")
 
         # Get JSON data for the App ID
         app_id = app['id']
-        print("Checking for defined Pinning Schemes\n")
-        print("App Data for ID:", app_id)
         app_data = get_app_data(app_id, session_file)
+
         mitm_host_server_pinned_certs_list = app_data["overrideOrSandbox"]["policy"]["mitm_host_server_pinned_certs_list"]
+        print("Finding Defined Pinning Schemes\n")
         for item in mitm_host_server_pinned_certs_list:
             value = item["value"]
             domain = value["mitm_host_server_pinned_certs_domain"]
             pinning_type = value["mitm_host_server_pinned_certs_type"]
-            print(f"Domain: {domain}, Type: {pinning_type}")
+            print(f"\tDomain: {domain}, Type: {pinning_type}")
 
 else:
     print(f"Failed to retrieve data. Status code: {response.status_code}")
